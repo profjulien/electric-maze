@@ -1,17 +1,17 @@
 
-Electric Maze Game Prototype
-============================
+Electric Maze Game Prototype with Timer and Reset
+=================================================
 
-This prototype is a simple grid-based game where players navigate a maze by clicking on the correct path.
+This version of the Electric Maze game includes a 5-minute countdown timer and resets discovered cells upon hitting an incorrect cell.
 
-How to Use:
-1. Open the `index.html` file in a modern web browser.
-2. Players take turns clicking on cells to find the correct path.
-3. Correct cells will turn green; incorrect cells will turn red.
+Game Rules:
+1. Navigate the maze by clicking cells to find the correct path from the green start cell to the orange end cell.
+2. When a red (incorrect) cell is clicked, all discovered cells reset to grey, and players return to the starting point.
+3. Each incorrect move adds a 10-second penalty to the remaining time.
 
-Customization:
-- You can modify the maze size or random path logic by editing the JavaScript code in `index.html`.
+How to Start:
+- Open the `index.html` file in a modern web browser to play.
 
 Notes:
-- This is a standalone prototype. For multiplayer functionality, additional backend development is required.
+- This is a standalone prototype. Multiplayer functionality would require additional backend implementation.
     
