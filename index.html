@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Maze</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        #maze {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            gap: 5px;
+            margin: 20px;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .correct {
+            background-color: #8bc34a !important;
+        }
+        .wrong {
+            background-color: #f44336 !important;
+        }
+        #info {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Electric Maze</h1>
+    <div id="maze"></div>
+    <div id="info">Click on a cell to navigate the maze!</div>
+
+    <script>
+        const mazeSize = 10;
+        const mazeElement = document.getElementById("maze");
+        const infoElement = document.getElementById("info");
+
+        // Create a random path
+        const correctPath = [];
+        for (let i = 0; i < mazeSize; i++) {
+            correctPath.push(Math.floor(Math.random() * mazeSize));
+        }
+
+        // Generate maze cells
+        for (let row = 0; row < mazeSize; row++) {
+            for (let col = 0; col < mazeSize; col++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+
+                // Add click event
+                cell.addEventListener("click", () => {
+                    const currentRow = parseInt(cell.dataset.row);
+                    const currentCol = parseInt(cell.dataset.col);
+
+                    if (currentCol === correctPath[currentRow]) {
+                        cell.classList.add("correct");
+                        infoElement.textContent = `Row ${currentRow + 1} cleared!`;
+                    } else {
+                        cell.classList.add("wrong");
+                        infoElement.textContent = `Wrong step! Try again.`;
+                    }
+
+                    // Disable further clicks on this cell
+                    cell.style.pointerEvents = "none";
+                });
+
+                mazeElement.appendChild(cell);
+            }
+        }
+    </script>
+</body>
+</html>
+    
