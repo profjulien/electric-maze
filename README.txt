@@ -1,17 +1,17 @@
 
-Electric Maze Game Prototype with Display of Moves Until Incorrect Cell
-=======================================================================
+Electric Maze Game Prototype with Adjacent Path and Time Deduction Penalty
+=========================================================================
 
 This version of the Electric Maze game includes:
 1. A 5-minute countdown timer.
-2. Display of correct (green) and incorrect (red) cells until an incorrect cell triggers a full reset.
-3. Pause and prompt to change players when an incorrect cell is clicked.
-4. Resume with a 10-second penalty after any key is pressed.
+2. Deduction of 10 seconds from the timer for each incorrect cell.
+3. A continuous, adjacent path from the start to the end of the maze.
+4. Game over when the timer reaches zero, or a win if the end is reached before time runs out.
 
 Game Rules:
-1. Navigate the maze by clicking cells to find the correct path from the green start cell to the orange end cell.
-2. When a red (incorrect) cell is clicked, all cells reset to grey, the timer pauses, and a message to change players appears.
-3. After pressing any key, the game resumes with a 10-second penalty added to the timer.
+1. Navigate the maze by clicking cells to follow the adjacent path from the green start cell to the orange end cell.
+2. When a red (incorrect) cell is clicked, 10 seconds are deducted from the timer, and all cells reset to grey.
+3. If the timer runs out, the game is over. If the end cell is reached before time runs out, the team wins.
 
 How to Start:
 - Open the `index.html` file in a modern web browser to play.

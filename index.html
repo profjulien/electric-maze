@@ -78,7 +78,7 @@
         let intervalId;
         let timerPaused = false;
 
-        // Timer countdown with penalty addition
+        // Timer countdown with deduction penalty
         function startTimer() {
             intervalId = setInterval(() => {
                 if (!timerPaused && timeRemaining > 0) {
@@ -98,19 +98,24 @@
             timerElement.textContent = `Time Remaining: ${minutes}:${seconds}`;
         }
 
-        function addPenalty() {
-            timeRemaining += 10; // Adds 10 seconds penalty
+        function deductPenalty() {
+            timeRemaining -= 10; // Deducts 10 seconds penalty
+            if (timeRemaining < 0) timeRemaining = 0; // Prevent negative time
             updateTimerDisplay();
         }
 
-        // Create a random path, ensuring at least one adjacent cell to start is correct
+        // Create a continuous path of adjacent cells from start to end
         const correctPath = [];
-        for (let i = 0; i < mazeSize; i++) {
-            correctPath.push(Math.floor(Math.random() * mazeSize));
+        let currentRow = 0, currentCol = 0;
+        while (currentRow < mazeSize - 1 || currentCol < mazeSize - 1) {
+            correctPath.push([currentRow, currentCol]);
+            if (currentRow < mazeSize - 1 && (Math.random() < 0.5 || currentCol == mazeSize - 1)) {
+                currentRow++; // Move down
+            } else {
+                currentCol++; // Move right
+            }
         }
-        correctPath[0] = 0; // Ensure start is in the first column
-        correctPath[1] = Math.random() < 0.5 ? 1 : 0; // Ensure either cell (1,0) or (0,1) is correct
-        correctPath[mazeSize - 1] = mazeSize - 1; // Ensure end is in the last column
+        correctPath.push([mazeSize - 1, mazeSize - 1]); // Ensure endpoint is included
 
         // Generate maze cells
         for (let row = 0; row < mazeSize; row++) {
@@ -128,23 +133,26 @@
                 cell.addEventListener("click", () => {
                     if (timerPaused) return;
 
-                    const currentRow = parseInt(cell.dataset.row);
-                    const currentCol = parseInt(cell.dataset.col);
+                    const currentCell = [parseInt(cell.dataset.row), parseInt(cell.dataset.col)];
+                    const isCorrect = correctPath.some(
+                        pathCell => pathCell[0] === currentCell[0] && pathCell[1] === currentCell[1]
+                    );
 
-                    if (currentCol === correctPath[currentRow]) {
+                    if (isCorrect) {
                         cell.classList.add("correct");
-                        infoElement.textContent = `Correct move on row ${currentRow + 1}!`;
+                        infoElement.textContent = `Correct move on row ${currentCell[0] + 1}!`;
+
+                        // Check if reached the end
+                        if (currentCell[0] === mazeSize - 1 && currentCell[1] === mazeSize - 1) {
+                            clearInterval(intervalId);
+                            infoElement.textContent = "Congratulations! You've completed the maze!";
+                        }
                     } else {
                         cell.classList.add("wrong");
                         infoElement.textContent = `Wrong step! Path reset.`;
                         showChangePlayerMessage();
                         resetAllCells();
-                    }
-
-                    // Check if reached the end
-                    if (currentRow === mazeSize - 1 && currentCol === mazeSize - 1) {
-                        clearInterval(intervalId);
-                        infoElement.textContent = "Congratulations! You've completed the maze!";
+                        deductPenalty();
                     }
                 });
 
@@ -180,7 +188,6 @@
         }
 
         function resumeAfterPlayerChange() {
-            addPenalty(); // Apply 10-second penalty
             changePlayerMessage.style.display = "none"; // Hide change player message
             timerPaused = false; // Resume timer
             startTimer();
