@@ -38,12 +38,6 @@
         .end {
             background-color: #ff9800 !important; /* Orange for end */
         }
-        .correct {
-            background-color: #8bc34a !important;
-        }
-        .wrong {
-            background-color: #f44336 !important;
-        }
         #info {
             margin-top: 20px;
             font-size: 18px;
@@ -110,7 +104,6 @@
         }
         correctPath[0] = 0; // Ensure start is in the first column
         correctPath[1] = Math.random() < 0.5 ? 1 : 0; // Ensure either cell (1,0) or (0,1) is correct
-
         correctPath[mazeSize - 1] = mazeSize - 1; // Ensure end is in the last column
 
         // Generate maze cells
@@ -139,7 +132,7 @@
                         cell.classList.add("wrong");
                         infoElement.textContent = `Wrong step! Path reset.`;
                         showChangePlayerMessage();
-                        resetDiscoveredCells();
+                        resetAllCells();
                     }
 
                     // Disable further clicks on this cell
@@ -156,12 +149,16 @@
             }
         }
 
-        function resetDiscoveredCells() {
-            const cells = document.querySelectorAll(".correct");
+        function resetAllCells() {
+            const cells = document.querySelectorAll(".cell");
             cells.forEach(cell => {
-                cell.classList.remove("correct");
+                cell.classList.remove("correct", "wrong", "start", "end");
+                cell.classList.add("cell");
                 cell.style.pointerEvents = ""; // Re-enable clicks
+                cell.style.backgroundColor = "#ccc"; // Reset color to grey
             });
+            document.querySelector(".cell[data-row='0'][data-col='0']").classList.add("start");
+            document.querySelector(".cell[data-row='" + (mazeSize - 1) + "'][data-col='" + (mazeSize - 1) + "']").classList.add("end");
         }
 
         function disableAllCells() {
