@@ -152,8 +152,7 @@
         function resetAllCells() {
             const cells = document.querySelectorAll(".cell");
             cells.forEach(cell => {
-                cell.classList.remove("correct", "wrong", "start", "end");
-                cell.classList.add("cell");
+                cell.className = "cell"; // Reset all classes except "cell"
                 cell.style.pointerEvents = ""; // Re-enable clicks
                 cell.style.backgroundColor = "#ccc"; // Reset color to grey
             });
