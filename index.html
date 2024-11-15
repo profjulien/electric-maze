@@ -52,6 +52,12 @@
             font-size: 24px;
             margin-top: 10px;
         }
+        #change-player-message {
+            font-size: 24px;
+            color: #f44336;
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -59,23 +65,26 @@
     <div id="timer">Time Remaining: 05:00</div>
     <div id="maze"></div>
     <div id="info">Click on a cell to navigate the maze from the green start point to the orange end point!</div>
+    <div id="change-player-message">Incorrect move! Change player. Press any key to continue.</div>
 
     <script>
         const mazeSize = 10;
         const mazeElement = document.getElementById("maze");
         const infoElement = document.getElementById("info");
         const timerElement = document.getElementById("timer");
+        const changePlayerMessage = document.getElementById("change-player-message");
 
         let timeRemaining = 300; // 5 minutes in seconds
         let intervalId;
+        let timerPaused = false;
 
         // Timer countdown with penalty addition
         function startTimer() {
             intervalId = setInterval(() => {
-                if (timeRemaining > 0) {
+                if (!timerPaused && timeRemaining > 0) {
                     timeRemaining--;
                     updateTimerDisplay();
-                } else {
+                } else if (timeRemaining <= 0) {
                     clearInterval(intervalId);
                     infoElement.textContent = "Time's up! Game over!";
                     disableAllCells();
@@ -94,12 +103,14 @@
             updateTimerDisplay();
         }
 
-        // Create a random path, setting start and end points
+        // Create a random path, ensuring at least one adjacent cell to start is correct
         const correctPath = [];
         for (let i = 0; i < mazeSize; i++) {
             correctPath.push(Math.floor(Math.random() * mazeSize));
         }
         correctPath[0] = 0; // Ensure start is in the first column
+        correctPath[1] = Math.random() < 0.5 ? 1 : 0; // Ensure either cell (1,0) or (0,1) is correct
+
         correctPath[mazeSize - 1] = mazeSize - 1; // Ensure end is in the last column
 
         // Generate maze cells
@@ -116,6 +127,8 @@
 
                 // Add click event
                 cell.addEventListener("click", () => {
+                    if (timerPaused) return;
+
                     const currentRow = parseInt(cell.dataset.row);
                     const currentCol = parseInt(cell.dataset.col);
 
@@ -124,9 +137,9 @@
                         infoElement.textContent = `Correct move on row ${currentRow + 1}!`;
                     } else {
                         cell.classList.add("wrong");
-                        infoElement.textContent = `Wrong step! Path reset, 10 seconds added to the timer.`;
+                        infoElement.textContent = `Wrong step! Path reset.`;
+                        showChangePlayerMessage();
                         resetDiscoveredCells();
-                        addPenalty();
                     }
 
                     // Disable further clicks on this cell
@@ -156,6 +169,22 @@
             cells.forEach(cell => {
                 cell.style.pointerEvents = "none";
             });
+        }
+
+        function showChangePlayerMessage() {
+            timerPaused = true;
+            clearInterval(intervalId); // Pause the timer
+            changePlayerMessage.style.display = "block"; // Show change player message
+
+            // Wait for any key press to continue
+            document.addEventListener("keydown", resumeAfterPlayerChange, { once: true });
+        }
+
+        function resumeAfterPlayerChange() {
+            addPenalty(); // Apply 10-second penalty
+            changePlayerMessage.style.display = "none"; // Hide change player message
+            timerPaused = false; // Resume timer
+            startTimer();
         }
 
         // Start the timer when the game loads
