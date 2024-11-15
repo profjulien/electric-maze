@@ -38,6 +38,12 @@
         .end {
             background-color: #ff9800 !important; /* Orange for end */
         }
+        .correct {
+            background-color: #8bc34a !important;
+        }
+        .wrong {
+            background-color: #f44336 !important;
+        }
         #info {
             margin-top: 20px;
             font-size: 18px;
@@ -135,9 +141,6 @@
                         resetAllCells();
                     }
 
-                    // Disable further clicks on this cell
-                    cell.style.pointerEvents = "none";
-
                     // Check if reached the end
                     if (currentRow === mazeSize - 1 && currentCol === mazeSize - 1) {
                         clearInterval(intervalId);
@@ -152,7 +155,7 @@
         function resetAllCells() {
             const cells = document.querySelectorAll(".cell");
             cells.forEach(cell => {
-                cell.className = "cell"; // Reset all classes except "cell"
+                cell.classList.remove("correct", "wrong"); // Remove both correct and wrong classes
                 cell.style.pointerEvents = ""; // Re-enable clicks
                 cell.style.backgroundColor = "#ccc"; // Reset color to grey
             });

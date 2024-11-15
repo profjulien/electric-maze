@@ -1,10 +1,10 @@
 
-Electric Maze Game Prototype with Full Reset of All Colors and Player Change Message Display
-===========================================================================================
+Electric Maze Game Prototype with Display of Moves Until Incorrect Cell
+=======================================================================
 
 This version of the Electric Maze game includes:
 1. A 5-minute countdown timer.
-2. Complete reset of all cells, both green and red, to grey upon hitting an incorrect cell.
+2. Display of correct (green) and incorrect (red) cells until an incorrect cell triggers a full reset.
 3. Pause and prompt to change players when an incorrect cell is clicked.
 4. Resume with a 10-second penalty after any key is pressed.
 
